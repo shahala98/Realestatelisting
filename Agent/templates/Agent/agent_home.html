@@ -1,0 +1,57 @@
+{% extends 'Agent/agent_base.html' %}
+{% load static %}
+
+{% block title %}Agent Home{% endblock %}
+
+{% block content %}
+  <!-- Billboard Section -->
+  <section id="billboard">
+    <div class="container">
+      <div class="row flex-lg-row-reverse align-items-center">
+        <div class="col-lg-6">
+          <img src="{% static 'images/billboard.png' %}" class="d-block mx-lg-auto img-fluid" 
+               alt="A beautiful home showcasing luxury and comfort" width="700" height="500" loading="lazy">
+        </div>
+        <div class="col-lg-6">
+          <h1 class="text-capitalize lh-1 my-3">Perfect way to buy and sell a home</h1>
+          <p class="lead">Discover the perfect blend of luxury and comfort with our exclusive property listings. Our dedicated team is here to guide you through every step of the rental process, ensuring a seamless experience. Whether you're looking for a cozy apartment or a spacious house, we have something to suit every need. Let us help you find your dream home today!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+   <!-- Feature start  -->
+   <section id="feature">
+    <div class="container py-5">
+      <div class="row">
+        <div class="section-header align-center mb-5">
+          <h2 class=" text-capitalize m-0">Featured In</h2>
+        </div>
+      </div>
+      <div class="row d-flex justify-content-between">
+        <div class="col-md-2 ">
+          <div class="my-3" role="group" aria-label="3 / 7" style="width: 158.667px; margin-right: 20px;"><img
+              alt="image" src="{% static 'images/logo1.png' %}"></div>
+        </div>
+        <div class="col-md-2">
+          <div class="my-3" role="group" aria-label="3 / 7" style="width: 158.667px; margin-right: 20px;"><img
+              alt="image" src="{% static 'images/logo2.png' %}"></div>
+        </div>
+        <div class="col-md-2">
+          <div class="my-3" role="group" aria-label="3 / 7" style="width: 158.667px; margin-right: 20px;"><img
+              alt="image" src="{% static 'images/logo3.png' %}"></div>
+        </div>
+        <div class="col-md-2">
+          <div class="my-3" role="group" aria-label="3 / 7" style="width: 158.667px; margin-right: 20px;"><img
+              alt="image" src="{% static 'images/logo4.png' %}"></div>
+        </div>
+        <div class="col-md-2">
+          <div class="my-3" role="group" aria-label="3 / 7" style="width: 158.667px; margin-right: 20px;"><img
+              alt="image" src="{% static 'images/logo6.png' %}"></div>
+        </div>
+
+
+      </div>
+    </div>
+  </section>
+{% endblock %}

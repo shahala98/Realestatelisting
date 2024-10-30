@@ -1,0 +1,64 @@
+{% extends 'Agent/agent_base.html' %}
+{% load static %}
+
+{% block title %}Property Listings{% endblock %}
+
+{% block content %}
+<br>
+
+<h2 class="text-center">Property Listings</h2>
+
+<!-- Dropdown to filter by property type -->
+<div class="text-center mb-4">
+    <form method="GET" action="{% url 'Agent:view_property' %}" class="form-inline">
+        <select name="type" onchange="this.form.submit()" class="form-control">
+            <option value="all" {% if selected_type == 'all' %}selected{% endif %}>All</option>
+            <option value="Rent" {% if selected_type == 'Rent' %}selected{% endif %}>Rent</option>
+            <option value="Sale" {% if selected_type == 'Sale' %}selected{% endif %}>Sale</option>
+            <option value="Lease" {% if selected_type == 'Lease' %}selected{% endif %}>Lease</option>
+        </select>
+    </form>
+</div>
+
+<div class="container">
+    <div class="row bootstrap snippets bootdeys" id="real-estates-columns">
+        {% for property in properties %}
+        <div class="col-md-4 col-sm-6 col-xs-12 mb-4">
+            <div class="panel">
+                <div class="panel-body">
+                    <a href="{% url 'Agent:property_details' property.id %}">
+                        <img src="{{ property.image.url }}" class="img-responsive" alt="{{ property.title }}" style="width: 300px; height: auto;">
+                    </a>
+                    <div class="title-realestates-columns">
+                        <h4>
+                            <a href="{% url 'Agent:property_details' property.id %}"><strong>{{ property.title }}</strong></a>
+                        </h4>
+                        <small class="label label-warning"><i class="fa fa-dot-circle-o"></i> ${{ property.price }}</small>
+                        <hr>
+                        <p>{{ property.description|truncatewords:15 }}</p>
+                    </div>
+                    <div class="footer-realestates-columns">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <a href="#" class="btn btn-default btn-block" style="color: white;"><i class="fa fa-thumb-tack"></i> {{ property.bedrooms }} Bedroom</a>
+                                <a href="#" class="btn btn-default btn-block" style="color: white;"><i class="fa fa-female"></i> {{ property.bathrooms }} Bathroom</a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="{% url 'Agent:property_details' property.id %}" class="btn btn-primary btn-block">View Details</a>
+    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% empty %}
+        <div class="col-12">
+            <p class="text-center">No properties available for the selected type.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

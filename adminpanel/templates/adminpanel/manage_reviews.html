@@ -1,0 +1,70 @@
+{% extends "adminpanel/admin_base.html" %}
+
+{% block title %}
+Manage Reviews
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="my-4">Manage Reviews</h1>
+    
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Agent</th>
+                <th>Listing</th>
+                <th>Rating</th>
+                <th>Comment</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for review in reviews %}
+            <tr>
+                <td>{{ review.user.get_full_name }}</td>
+                <td>
+                    {% if review.listing.agent %}
+                        <a href="{% url 'adminpanel:user_details' review.user.id %}">
+                            {{ review.listing.agent.user.get_full_name }}
+                        </a>  <!-- Link to agent's profile -->
+                    {% else %}
+                        N/A  <!-- Fallback if no agent exists -->
+                    {% endif %}
+                </td>
+                <td>
+                    {% if review.listing %}
+                        <a href="{% url 'adminpanel:view_property' review.listing.id %}">{{ review.listing.title }}</a>
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>  
+                <td>{{ review.rating }}</td>
+                <td>{{ review.comment }}</td>
+                <td>
+                    {% if review.is_active %}
+                        <span class="badge bg-success">Active</span>
+                    {% else %}
+                        <span class="badge bg-danger">Inactive</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if review.is_active %}
+                    <form action="{% url 'adminpanel:deactivate_review' review.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-secondary btn-sm" onclick="return confirm('Are you sure you want to deactivate this review?');">Deactivate</button>
+                    </form>
+                    {% else %}
+                    <form action="{% url 'adminpanel:activate_review' review.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('Are you sure you want to activate this review?');">Activate</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

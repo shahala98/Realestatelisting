@@ -1,0 +1,9 @@
+
+
+
+    'Activate Your Account',
+    'Please activate your account by clicking the link below.',
+    settings.DEFAULT_FROM_EMAIL,
+    ['user@example.com'],
+    fail_silently=False,
+

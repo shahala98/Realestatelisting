@@ -1,0 +1,21 @@
+{% extends 'Agent/agent_base.html' %}
+{% load static %}
+
+{% block title %}Add Property{% endblock %}
+
+{% block content %}
+<h2>Add a New Property</h2>
+<p>Logged in as: {{ request.user.username }}</p>  <!-- Display the logged-in user's name -->
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+     
+    
+    <label for="images">Upload Property Images (You can select multiple images):</label>
+    <input type="file" name="images" multiple class="form-control">
+    
+    <button type="submit" class="btn btn-primary">Add Property</button>
+</form>
+<br>
+{% endblock %}

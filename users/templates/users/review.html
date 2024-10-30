@@ -1,0 +1,12 @@
+{% extends "users/users_base.html" %}
+
+{% block title %}Property review{% endblock title %}
+
+{% block content %}
+<h1>Add Review for {{ property.title }}</h1>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit Review</button>
+</form>
+{% endblock %}

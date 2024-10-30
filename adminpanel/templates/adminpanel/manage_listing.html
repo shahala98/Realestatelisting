@@ -1,0 +1,65 @@
+{% extends "adminpanel/admin_base.html" %}
+
+{% block title %}
+  Admin Home
+{% endblock %}
+
+{% block content %}
+<main style="margin-top: 0;">
+  <div class="container pt-4">
+    <h2>Manage Property Listings</h2>
+
+    <div class="mt-4">
+        <h3>Property Listings</h3>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">ID</th> <!-- Set width for ID column -->
+                    <th class="text-center">Property Name</th> <!-- Center the header -->
+                    <th>Location</th>
+                    <th style="width: 100px;">Price</th> <!-- Set width for Price column -->
+                    <th style="width: 100px;">Status</th> <!-- Set width for Status column -->
+                    <th style="width: 150px;">Actions</th> <!-- Set width for Actions column -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for property in properties %}
+                <tr>
+                    <td>{{ property.id }}</td>
+                    <td class="text-center">
+                        <a href="{% url 'adminpanel:view_property' property.id %}">{{ property.title }}</a> <!-- Make property title clickable -->
+                    </td>
+                    <td>{{ property.location }}</td>
+                    <td>{{ property.price }}</td>
+                    <td>
+                        {% if property.is_active %}
+                            <span class="badge bg-success">Active</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'adminpanel:view_property' property.id %}" class="btn btn-info btn-sm">View</a>
+
+                        {% if property.is_active %}
+                        <a href="{% url 'adminpanel:property_deactivate' property.id %}" class="btn btn-warning btn-sm" onclick="return confirm('Are you sure you want to deactivate this property?');">
+                            Deactivate
+                        </a>
+                        {% else %}
+                        <a href="{% url 'adminpanel:property_activate' property.id %}" class="btn btn-success btn-sm" onclick="return confirm('Are you sure you want to activate this property?');">
+                            Activate
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">No properties found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+  </div>
+</main>
+{% endblock %}

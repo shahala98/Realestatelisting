@@ -1,0 +1,162 @@
+{% extends 'users/users_base.html' %}
+
+{% block title %}{{ property.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <br>
+    <h1 class="text-center">{{ property.title }}</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Display the main image with adjusted size -->
+            <img src="{{ property.image.url }}" alt="{{ property.title }} - Main Image" class="img-fluid rounded mb-3" style="max-width: 300px; max-height: 200px;"> 
+
+            <!-- Display multiple images in a carousel -->
+            {% if images %}
+                <div id="propertyImages" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for image in images %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img src="{{ image.image.url }}" alt="{{ property.title }}" class="d-block w-100 img-fluid rounded" style="max-height: 400px;">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <a class="carousel-control-prev" href="#propertyImages" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#propertyImages" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </a>
+                </div>
+            {% else %}
+                <img src="{{ property.image.url }}" alt="{{ property.title }}" class="img-fluid rounded" style="max-width: 100%;">
+            {% endif %}
+        </div>
+
+        <div class="col-md-6">
+            <h4>Details</h4>
+            <p><strong>Description:</strong> {{ property.description }}</p>
+            <p><strong>Price:</strong> ${{ property.price }}</p>
+            <p><strong>Location:</strong> {{ property.location }}</p>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <p><strong>Bedrooms:</strong> {{ property.bedrooms }}</p>
+                </div>
+                <div class="col-md-4">
+                    <p><strong>Bathrooms:</strong> {{ property.bathrooms }}</p>
+                </div>
+                <div class="col-md-4">
+                    <p><strong>Square Feet:</strong> {{ property.square_feet }}</p>
+                </div>
+            </div>
+
+            <p><strong>Property Type:</strong> {{ property.property_type }}</p>
+            <p><strong>Listing Type:</strong> {{ property.listing_type }}</p>
+            <p><strong>Listed On:</strong> {{ property.listing_date|date:"F j, Y" }}</p>
+            
+            <h4>Agent Information</h4>
+            <div class="agent-info">
+                {% if property.agent.profile_image %}
+                    <img src="{{ property.agent.profile_image.url }}" alt="{{ property.agent.user.username }}'s Profile Image" class="img-fluid rounded-circle mb-2" style="width: 100px; height: 100px;">
+                {% else %}
+                    <p>No Profile Image Available</p>
+                {% endif %}
+                <p><strong>Name:</strong> {{ property.agent.user.username }}</p>
+                <p><strong>Email:</strong> <a href="mailto:{{ property.agent.user.email }}">{{ property.agent.user.email }}</a></p>
+
+                <div class="mt-3">
+                    <form method="post" action="{% url 'users:add_to_favorites' property.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-dark me-2" 
+                                {% if is_favorite %}
+                                    onclick="return confirm('Are you sure you want to remove this property from your favorites?');"
+                                {% endif %}>
+                            {% if is_favorite %}
+                                <i class="fa fa-heart"></i> Remove from Favorites
+                            {% else %}
+                                <i class="fa fa-heart-o"></i> Add to Favorites
+                            {% endif %}
+                        </button>
+                    </form>
+                    
+                    <a href="mailto:{{ property.agent.user.email }}?subject=Inquiry about {{ property.title }}&body=I am interested in this property: {{ property.description }}" class="btn btn-primary">Inquiry</a>
+                </div>
+                
+                <p><strong>Phone:</strong> {{ property.agent.phone|default:"Not provided" }}</p>
+                <p><strong>About:</strong> {{ property.agent.about|default:"Not provided" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-8 col-lg-6">
+            <h2 class="text-center mb-4">Reviews</h2>
+            {% if reviews %}
+                {% for review in reviews %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5><small class="text-muted">Posted By: {{ review.user.username }}</small></h5>
+                            <p>{{ review.comment }}</p>
+                            <p><small class="text-muted">Posted on {{ review.created_at }}</small></p>
+                            <p><small class="text-muted">Rating: {{ review.rating }} / 5</small></p>
+
+                            {% if user.is_authenticated and review.user == user %}
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                        Actions
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{% url 'users:edit_review' review.id %}">Edit</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'users:delete_review' review.id %}" onclick="return confirm('Are you sure you want to delete this review?');">Delete</a></li>
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-center">No reviews yet. Be the first to add a review!</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Add Review Form -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-8 col-lg-6">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h2 class="card-title mb-4 text-center">Add Review</h2>
+                    
+                    <!-- Error Messages -->
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <ul>
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for error in form.non_field_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    
+                    <form method="post" action="{% url 'users:view_property' property.id %}">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <div class="mt-3 text-center">
+                            <button type="submit" class="btn btn-primary">Add Review</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

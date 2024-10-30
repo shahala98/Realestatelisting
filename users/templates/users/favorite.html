@@ -1,0 +1,98 @@
+{% extends 'users/users_base.html' %}
+
+{% block title %}My Favorites{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        <div class="osahan-account-page-left shadow-sm bg-white h-100">
+            <div class="border-bottom p-4">
+                <div class="osahan-user text-center">
+                    <div class="osahan-user-media">
+                        <div class="osahan-user-media-body">
+                            <h6 class="mb-2">{{ user.get_full_name }}</h6>
+                            <p class="mb-1">{{ user.phone_number }}</p>
+                            <p>{{ user.email }}</p>
+                            <p class="mb-0 text-black font-weight-bold">
+                                <a class="text-primary mr-3" data-toggle="modal" data-target="#edit-profile-modal" href="#">
+                                  
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="osahan-account-page-right shadow-sm bg-white p-4 h-100">
+          
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade active show" id="
+                favourites" role="tabpanel" aria-labelledby="favourites-tab">
+                <h4 class="font-weight-bold mt-0 mb-4">My Favorites</h4>
+                <div class="row">
+                    {% for favorite in favorites %}
+                    <div class="col-md-4 col-sm-6 mb-4 pb-2">
+                        <div class="list-card bg-white h-100 rounded overflow-hidden position-relative shadow-sm">
+                            <div class="list-card-image">
+                                <div class="favourite-heart text-danger position-absolute">
+                                    <!-- Button to trigger the remove favorite modal -->
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#removeFavoriteModal{{ favorite.listing.id }}">
+                                        <i class="icofont-heart-broken"></i> <!-- Broken heart icon for removal -->
+                                    </a>
+                                </div>
+                                <a href="{% url 'users:view_property' favorite.listing.id %}">
+                                    <img src="{{ favorite.listing.image.url }}" class="img-fluid item-img" alt="{{ favorite.listing.title }}">
+                                </a>
+                            </div>
+                            <div class="p-3 position-relative">
+                                <div class="list-card-body">
+                                    <h6 class="mb-1">
+                                        <a href="{% url 'users:view_property' favorite.listing.id %}" class="text-black">{{ favorite.listing.title }}</a>
+                                    </h6>
+                                    <p class="text-gray mb-3">{{ favorite.listing.location }}</p>
+                                    <p class="text-gray mb-3 time">
+                                        <span class="bg-light text-dark rounded-sm pl-2 pb-1 pt-1 pr-2">
+                                            <i class="icofont-square"></i> {{ favorite.listing.square_feet }} sqft
+                                        </span>
+                                        <span class="float-right text-black-50">${{ favorite.listing.price }}</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal for Confirming Removal -->
+                        <div class="modal fade" id="removeFavoriteModal{{ favorite.listing.id }}" tabindex="-1" aria-labelledby="removeFavoriteModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="removeFavoriteModalLabel">Remove Favorite</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to remove "{{ favorite.listing.title }}" from your favorites?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        
+                                        <!-- Form to handle removal on submit -->
+                                        <form method="post" action="{% url 'users:remove_favorite' favorite.listing.id %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger">Remove</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-center">You have no favorite properties.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'Agent/agent_base.html' %}
+{% load static %}
+
+{% block title %}Property List{% endblock %}
+
+{% block content %}
+  <style>
+    .table-header {
+      background-color: #343a40; /* Dark background for header */
+      color: white; /* White text for header */
+    }
+    table {
+      background-color: #ffffff; /* White background for table */
+      color: #343a40; /* Dark text for table */
+    }
+    .btn-info {
+      background-color: #17a2b8; /* Bootstrap's info button color */
+      color: #ffffff; /* White text for buttons */
+    }
+  </style>
+
+  <div class="container mt-5 pt-5 text-capitalize">
+    <h2 class="mb-4">Property Listings</h2>
+    <table class="table table-striped">
+      <thead class="table-header"> <!-- Header styling -->
+        <tr>
+          <th>Property Name</th>
+          <th>Owner</th>
+          <th>Published Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if properties.exists %}
+          {% for property in properties %}
+          <tr>
+            <td>{{ property.title }}</td>
+            <td>{{ property.agent.user.username }}</td> <!-- Ensure this is correct based on your models -->
+            <td>{{ property.listing_date }}</td>
+            <td>
+              <a href="{% url 'Agent:property_details' property.id %}" class="btn btn-info">View</a>
+            </td>
+          </tr>
+          {% endfor %}
+        {% else %}
+        <tr>
+          <td colspan="4" class="text-center">No properties found.</td> <!-- Centered message -->
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

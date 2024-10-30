@@ -1,0 +1,75 @@
+{% extends 'users/users_base.html' %}
+{% load static %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+<br>
+    <div class="container d-flex justify-content-center mt-5">
+        <div class="col-lg-8">
+            <h1 class="text-center mb-4">Edit Your Profile</h1>
+
+            <!-- Edit Profile Form -->
+            <form method="POST" enctype="multipart/form-data" class="mt-4">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <!-- User Info Fields -->
+                        <div class="mb-3">
+                            {{ user_form.username.label_tag }}
+                            {{ user_form.username }}
+                        </div>
+                        <div class="mb-3">
+                            {{ user_form.email.label_tag }}
+                            {{ user_form.email }}
+                        </div>
+                        <div class="mb-3">
+                            {{ user_form.first_name.label_tag }}
+                            {{ user_form.first_name }}
+                        </div>
+                        <div class="mb-3">
+                            {{ user_form.last_name.label_tag }}
+                            {{ user_form.last_name }}
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <!-- Profile Info Fields -->
+                        <div class="mb-3">
+                            {{ profile_form.phone.label_tag }}
+                            {{ profile_form.phone }}
+                        </div>
+                        <div class="mb-3">
+                            {{ profile_form.about.label_tag }}
+                            {{ profile_form.about }}
+                        </div>
+                        <div class="mb-3">
+                            {{ profile_form.profile_image.label_tag }}
+                            {{ profile_form.profile_image }}
+                            {% if profile.profile_image %}
+                            <div class="mt-2">
+                                <img src="{{ profile.profile_image.url }}" class="img-thumbnail rounded" alt="Profile Image" style="max-width: 150px;">
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            {{ profile_form.id_proof.label_tag }}
+                            {{ profile_form.id_proof }}
+                            {% if profile.id_proof %}
+                            <div class="mt-2">
+                                <a href="{{ profile.id_proof.url }}" target="_blank">View Uploaded ID Proof</a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Save Button -->
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="submit" class="btn btn-primary me-3">Save Changes</button>
+                    <a href="{% url 'users:user_profile' %}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

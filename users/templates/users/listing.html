@@ -1,0 +1,54 @@
+{% extends 'users/users_base.html' %}
+{% load static %}
+
+{% block title %}Property List{% endblock %}
+
+{% block content %}
+  <style>
+    .table-header {
+      background-color: #343a40; /* Dark background for headers */
+      color: white; /* White text for headers */
+    }
+    table {
+      background-color: #ffffff; /* White background for the table */
+      color: #343a40; /* Dark text color for the table */
+    }
+    .btn-info {
+      color: #ffffff; /* White text on info button */
+    }
+  </style>
+
+  <div class="container mt-5 pt-5 text-capitalize align-items-center">
+    <h2 class="mb-4">Property Listings</h2> <!-- Heading for your property listings -->
+
+    <!-- Property Table -->
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th class="table-header">Property Name</th>
+          <th class="table-header">Owner</th>
+          <th class="table-header">Published Date</th>
+          <th class="table-header">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for property in properties %}
+        <tr>
+          <td>{{ property.title }}</td>  <!-- Ensure 'title' is a field in your Property model -->
+          <td>{{ property.agent.username }}</td>  <!-- Assuming 'agent' is a ForeignKey to User -->
+          <td>{{ property.listing_date }}</td>  <!-- Use the correct field for the listing date -->
+          <td>
+            <a href="{% url 'Agent:view_property'  %}" class="btn btn-info">View</a>  <!-- Link to view property detail -->
+
+         
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4">No properties found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
